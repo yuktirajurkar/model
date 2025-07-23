@@ -35,6 +35,31 @@ input_data = np.array([[
 
 # Prediction
 if st.button("Predict"):
+    sex = 0 if sex == "male" else 1
+    embarked_C = 1 if embarked == "C" else 0
+    embarked_Q = 1 if embarked == "Q" else 0
+    embarked_S = 1 if embarked == "S" else 0
+
+    input_data = pd.DataFrame([{
+        'Pclass': pclass,
+        'Sex': sex,
+        'Age': age,
+        'SibSp': sibsp,
+        'Parch': parch,
+        'Fare': fare,
+        'Embarked_C': embarked_C,
+        'Embarked_Q': embarked_Q,
+        'Embarked_S': embarked_S
+    }])
+
+    # Align columns with training data (order matters)
+    required_cols = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare',
+                     'Embarked_C', 'Embarked_Q', 'Embarked_S']
+
+    input_data = input_data[required_cols]  # Ensure correct column order
+
     prediction = model.predict(input_data)[0]
-    result = "Survived" if prediction == 1 else "Did not survive"
-    st.success(f"The passenger would have: {result}")
+    if prediction == 1:
+        st.success("🎉 Survived!")
+    else:
+        st.error("☠️ Did not survive.")
